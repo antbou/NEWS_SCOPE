@@ -1,5 +1,8 @@
 import './globals.css'
 import Appbar from './Appbar'
+import Providers from './provider/Providers'
+
+console.log("App")
 
 export default function RootLayout({
   children,
@@ -13,10 +16,11 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-
       <body>
-        <Appbar />
-        {children}
+        <Providers>
+          <Appbar />
+          {children}
+        </Providers>
       </body>
     </html>
   )
