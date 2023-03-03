@@ -3,6 +3,8 @@
 import { Navbar, Dropdown, Avatar, Button } from "flowbite-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react"
+import Link from 'next/link'
+
 
 
 export default function Appbar() {
@@ -31,18 +33,25 @@ export default function Appbar() {
             </Navbar.Brand>
             {/*  User settings */}
             <div className="flex md:order-2">
-                {status === "authenticated" && session.user ?
+                {!session && (
+                    <>
+                        <Button href="/api/auth/signin">
+                            Login
+                        </Button>
+                    </>
+                )}
+                {session?.user && (
                     <Dropdown
-                        arrowIcon={false}
-                        inline={true}
-                        label={<Avatar alt="User settings" img={session.user?.image} rounded={true} referrerpolicy="no-referrer" />}
+                        label={session.user.image && (
+                            <Avatar alt="User settings" img={session.user.image} rounded={true} />
+                        )}
                     >
                         <Dropdown.Header>
                             <span className="block text-sm">
-                                Bonnie Green
+                                {session.user.name}
                             </span>
                             <span className="block truncate text-sm font-medium">
-                                name@flowbite.com
+                                {session.user.email ?? session.user.name}
                             </span>
                         </Dropdown.Header>
                         <Dropdown.Item>
@@ -56,33 +65,24 @@ export default function Appbar() {
                         </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item>
-                            Sign out
+                            <Link href="/api/auth/signout">Sign out</Link>
                         </Dropdown.Item>
                     </Dropdown>
-                    :
-                    <Button href="/api/auth/signin">
-                        Login
-                    </Button>
-                }
+
+                )}
                 <Navbar.Toggle />
             </div>
             {/* Navbar label */}
             <Navbar.Collapse>
-                <Navbar.Link href=""
+                <Navbar.Link href="/"
                 >
                     Home
                 </Navbar.Link>
-                <Navbar.Link href="">
+                <Navbar.Link href="/">
                     About
                 </Navbar.Link>
-                <Navbar.Link href="">
+                <Navbar.Link href="/">
                     Services
-                </Navbar.Link>
-                <Navbar.Link href="">
-                    Pricing
-                </Navbar.Link>
-                <Navbar.Link href="">
-                    Contact
                 </Navbar.Link>
             </Navbar.Collapse>
         </Navbar>
