@@ -10,7 +10,7 @@ export default function Appbar() {
 
   const loading = status === "loading";
 
-  console.log("session");
+  console.log("session", session?.user);
 
   return (
     <Navbar fluid={true} rounded={true}>
@@ -63,20 +63,22 @@ export default function Appbar() {
             inline={true}
             className="border-1 border-gray-300"
             label={
-              session.user.image && (
-                <Avatar
-                  alt="User settings"
-                  img={(props) => (
-                    <img
-                      referrerPolicy="no-referrer"
-                      src={session.user?.image ?? undefined}
-                      {...props}
-                    />
-                  )}
-                  rounded={true}
-                  className="w-20"
-                />
-              )
+              <Avatar
+                alt="User settings"
+                img={
+                  session.user && session.user.image
+                    ? (props) => (
+                        <img
+                          referrerPolicy="no-referrer"
+                          src={session.user?.image ?? ""}
+                          {...props}
+                        />
+                      )
+                    : undefined
+                }
+                rounded={true}
+                className="w-20"
+              />
             }
           >
             <Dropdown.Header>
