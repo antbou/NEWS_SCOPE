@@ -124,50 +124,6 @@ export default function Page() {
 
   }
 
-
-
-  // try {
-  //   const user = await signup(data.email, data.password);
-
-  //   const pictureUrl = picture
-  //     ? await useUploadFile(picture, user.uid + "/pictureProfile/")
-  //     : defaultPhotoUrl;
-  //   await updateProfile(user, {
-  //     displayName: data.username,
-  //     photoURL: pictureUrl,
-  //   });
-  //   router.push("/login");
-  // } catch (err: any) {
-  //   setError("root.serverError", {
-  //     message: err.message ?? "Unknown error",
-  //   });
-
-  // // Create user
-  // const user = await signup(data.email, data.password);
-
-  // // Upload picture and get picture url
-  // const pictureUrl = picture
-  //   ? await useUploadFile(picture, user + "pictureProfile/")
-  //   : defaultPhotoUrl;
-
-  // // Finally update profile (displayName and photoURL)
-  // await updateProfile(user, {
-  //   displayName: data.username,
-  //   photoURL: pictureUrl,
-  // });
-
-  // await signUp(data.email, data.password, data.username, picture).then(
-  //   () => {
-  //     router.push("/");
-  //   }
-  // ).catch((err) => {
-  //   setError("root.serverError", {
-  //     message: err.message,
-  //   });
-  // });
-
-
-
   return (
     <div className="flex">
       <Card className="w-auto md:w-96 mt-5">
