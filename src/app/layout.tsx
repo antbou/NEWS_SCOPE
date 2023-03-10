@@ -1,8 +1,5 @@
 import "./globals.css";
-import Appbar from "./(news)/Appbar";
 import Providers from "./provider/Providers";
-
-console.log("App");
 
 export default function RootLayout({
   children,

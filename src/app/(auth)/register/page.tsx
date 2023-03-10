@@ -1,11 +1,8 @@
 "use client";
 
-import { auth } from "@/lib/firebase/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useState } from "react";
+import { auth } from "@/config/firebaseConfig";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -16,16 +13,21 @@ import {
   Toast,
   FileInput,
 } from "flowbite-react";
-import { HiExclamation, HiMail, HiOutlineLockClosed } from "react-icons/hi";
+import { HiExclamation, HiMail, HiOutlineLockClosed, HiUser } from "react-icons/hi";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useUploadFile } from "@/services/fileManager";
+import { FirebaseError } from "firebase/app";
+import i18n from "@/i18n";
 
 export default function Page() {
+  const router = useRouter();
+
   const FILE_SIZE = 1600 * 1024; // 160 KB
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
-    "image/gif",
     "image/png",
   ];
 
@@ -35,29 +37,23 @@ export default function Page() {
       username: yup.string().required(),
       password: yup.string().min(6).required(),
       image: yup
-        .mixed()
+        .mixed<FileList>()
         .test("fileSize", "File too large", (value: any) => {
-          console.log("value", value);
-          console.log(value.length == 0);
           return (
-            value.length == 0 ||
-            (value instanceof FileList &&
-              value.length >= 1 &&
-              value[0].size <= FILE_SIZE)
+            value.length === 0 ||
+            value.length >= 1 &&
+            value[0].size <= FILE_SIZE
           );
         })
-        .optional()
         .test(
           "fileFormat",
           "Unsupported Format",
           (value: any) =>
-            value.length == 0 ||
-            (value instanceof FileList &&
-              value.length >= 1 &&
-              SUPPORTED_FORMATS.includes(value[0].type))
+            value.length === 0 ||
+            value.length >= 1 &&
+            SUPPORTED_FORMATS.includes(value[0].type)
         )
-        .optional()
-        .default(null),
+
     })
     .required();
 
@@ -72,36 +68,105 @@ export default function Page() {
     resolver: yupResolver(schema),
   });
 
-  async function onSubmit(data: FormData) {
-    console.log("data", data);
-    // const status = await signIn("credentials", {
-    //   redirect: false,
-    //   username: data.email,
-    //   password: data.password,
-    //   callbackUrl: "/",
-    // });
-    // if (status?.ok) {
-    //   router.push("/");
-    // } else {
-    //   setError("root.serverError", {
-    //     message: status?.error ?? "Something went wrong",
-    //   });
-    // }
-  }
 
-  // const signUp = async () => {
-  //   // const { user } = await createUserWithEmailAndPassword(
-  //   //   auth,
-  //   //   email,
-  //   //   password
-  //   // );
 
+  // const register = async (
+  //   username: string,
+  //   password: string,
+  //   displayName: string,
+  //   picture: File | null
+  // ): Promise<void> => {
+  //   const user = await useSignUp(username, password);
+  //   const pictureUrl = picture
+  //     ? await attachPictureProfile(user, picture)
+  //     : defaultPhotoUrl;
   //   await updateProfile(user, {
-  //     displayName: "John Doe",
-  //     photoURL: "https://example.com/john-doe.png",
+  //     displayName: displayName,
+  //     photoURL: pictureUrl,
   //   });
   // };
-  // console.log("auth");
+
+
+  async function onSubmit(data: FormData) {
+
+    const picture = (data.image && data.image?.length > 0) ? data.image[0] : null;
+
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      ).then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        updateProfile(user, {
+          displayName: data.username,
+        });
+        return user;
+      });
+
+      const pictureUrl = picture ? await useUploadFile(picture, user.uid + "/pictureProfile/") : null;
+
+      await updateProfile(user, {
+        photoURL: pictureUrl,
+      });
+
+      router.push("/login");
+    } catch (error: any) {
+      const { code, message } = error;
+
+      const translatedMessage = code.startsWith('auth/') ? i18n.t(`errorMessages.${code}`) : message;
+
+      setError("root.serverError", {
+        message: translatedMessage,
+      });
+    }
+
+  }
+
+
+
+  // try {
+  //   const user = await signup(data.email, data.password);
+
+  //   const pictureUrl = picture
+  //     ? await useUploadFile(picture, user.uid + "/pictureProfile/")
+  //     : defaultPhotoUrl;
+  //   await updateProfile(user, {
+  //     displayName: data.username,
+  //     photoURL: pictureUrl,
+  //   });
+  //   router.push("/login");
+  // } catch (err: any) {
+  //   setError("root.serverError", {
+  //     message: err.message ?? "Unknown error",
+  //   });
+
+  // // Create user
+  // const user = await signup(data.email, data.password);
+
+  // // Upload picture and get picture url
+  // const pictureUrl = picture
+  //   ? await useUploadFile(picture, user + "pictureProfile/")
+  //   : defaultPhotoUrl;
+
+  // // Finally update profile (displayName and photoURL)
+  // await updateProfile(user, {
+  //   displayName: data.username,
+  //   photoURL: pictureUrl,
+  // });
+
+  // await signUp(data.email, data.password, data.username, picture).then(
+  //   () => {
+  //     router.push("/");
+  //   }
+  // ).catch((err) => {
+  //   setError("root.serverError", {
+  //     message: err.message,
+  //   });
+  // });
+
+
 
   return (
     <div className="flex">
@@ -147,6 +212,34 @@ export default function Page() {
               {...register("email")}
             />
           </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label
+                htmlFor="username1"
+                value="Your username"
+                color={errors.username ? "failure" : ""}
+              />
+            </div>
+            <TextInput
+              id="username1"
+              type="text"
+              required={true}
+              color={errors.username ? "failure" : ""}
+              icon={HiUser}
+              placeholder="John Doe"
+              {...register("username")}
+              helperText={
+                errors.username && (
+                  <React.Fragment>
+                    <span className="font-medium">Oops!</span>{" "}
+                    {errors.username?.message}
+                  </React.Fragment>
+                )
+              }
+            />
+          </div>
+
           <div>
             <div className="mb-2 block">
               <Label
@@ -174,33 +267,6 @@ export default function Page() {
             />
           </div>
 
-          <div>
-            <div className="mb-2 block">
-              <Label
-                htmlFor="username1"
-                value="Your username"
-                color={errors.username ? "failure" : ""}
-              />
-            </div>
-            <TextInput
-              id="username1"
-              type="text"
-              required={true}
-              color={errors.username ? "failure" : ""}
-              icon={HiOutlineLockClosed}
-              placeholder="John Doe"
-              {...register("username")}
-              helperText={
-                errors.username && (
-                  <React.Fragment>
-                    <span className="font-medium">Oops!</span>{" "}
-                    {errors.username?.message}
-                  </React.Fragment>
-                )
-              }
-            />
-          </div>
-
           <div id="fileUpload">
             <div className="mb-2 block">
               <Label
@@ -210,6 +276,7 @@ export default function Page() {
               />
             </div>
             <FileInput
+
               helperText={
                 errors.image && (
                   <React.Fragment>
@@ -240,12 +307,6 @@ export default function Page() {
             Sign Up
           </Link>
         </p>
-
-        <div className="my-2 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
-          <p className="mx-4 mb-0 text-center font-semibold dark:text-neutral-200">
-            OR
-          </p>
-        </div>
       </Card>
     </div>
   );

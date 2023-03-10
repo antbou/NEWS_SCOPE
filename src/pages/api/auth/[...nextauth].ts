@@ -1,9 +1,11 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { FirestoreAdapter } from "@next-auth/firebase-adapter";
+import { auth } from "@/config/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/firebase";
 import { FirebaseError } from "firebase/app";
+import i18n from "@/i18n";
 
 export const authOptions: NextAuthOptions = {
   theme: {
@@ -20,40 +22,64 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: "credentials",
-      async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) {
-          throw new Error("Username and password are required");
-        }
-
-        try {
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            credentials.username,
-            credentials.password
-          );
-          if (userCredential.user) {
-            return {
-              id: userCredential.user.uid,
-              name: userCredential.user.displayName,
-              email: userCredential.user.email,
-              image: userCredential.user.photoURL,
-            };
-          }
-        } catch (error) {
-          throw new Error(
-            error instanceof FirebaseError
-              ? error.message
-              : "Something went wrong"
-          );
-        }
-        return null;
-      },
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
+      async authorize(credentials) {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          credentials?.username ?? "",
+          credentials?.password ?? ""
+        )
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            // ...
+            return {
+              id: user.uid,
+              name: user.displayName,
+              email: user.email,
+              image: user.photoURL,
+            };
+          })
+          .catch((error) => {
+            if (
+              error instanceof FirebaseError &&
+              error.code.startsWith("auth/")
+            ) {
+              const { code, message } = error;
+
+              const translatedMessage = i18n.t(`errorMessages.${code}`);
+              throw new Error(translatedMessage);
+            }
+            throw error;
+          });
+
+        return userCredential;
+      },
     }),
   ],
+  adapter: FirestoreAdapter(),
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      if (token) {
+        session.user!.email = token.email;
+      }
+      return session;
+    },
+    redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) return url;
+      else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+      return baseUrl;
+    },
+  },
   session: {
     strategy: "jwt",
   },

@@ -1,9 +1,6 @@
-import Image from "next/image";
 import { Inter } from "@next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
-
-console.log("Server side rendering");
 
 export default function Home() {
   return (
