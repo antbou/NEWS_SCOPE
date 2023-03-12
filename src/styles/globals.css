@@ -8,7 +8,7 @@
 
 @layer components {
   .link {
-    @apply font-semibold underline-offset-4 hover:underline;
+    @apply font-semibold underline-offset-4 hover:underline hover:decoration-sky-400;
   }
   .container-fluid {
     @apply mx-10 md:mx-12 xl:mx-auto max-w-6xl;
