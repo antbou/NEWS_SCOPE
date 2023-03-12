@@ -1,5 +1,5 @@
-import "./globals.css";
-import Providers from "./provider/Providers";
+import '@/styles/globals.css';
+import Providers from '@/components/Providers';
 
 export default function RootLayout({
   children,
@@ -13,7 +13,7 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body>
+      <body className="max-h-screen">
         <Providers>{children}</Providers>
       </body>
     </html>

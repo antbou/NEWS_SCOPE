@@ -1,35 +1,25 @@
-"use client";
+'use client';
 
-import { auth } from "@/config/firebaseConfig";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  Button,
-  Label,
-  TextInput,
-  Card,
-  Toast,
-  FileInput,
-} from "flowbite-react";
-import { HiExclamation, HiMail, HiOutlineLockClosed, HiUser } from "react-icons/hi";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useUploadFile } from "@/services/fileManager";
-import { FirebaseError } from "firebase/app";
-import i18n from "@/i18n";
+import { auth } from '@/config/firebaseConfig';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { uploadFile } from '@/services/fileManager';
+import i18n from '@/i18n';
+import Image from 'next/image';
+import ErrorMessages from '@/components/ErrorMessages';
+import { Spinner } from '@/components/Spinner';
 
 export default function Page() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const FILE_SIZE = 1600 * 1024; // 160 KB
-  const SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/png",
-  ];
+  const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/png'];
 
   const schema = yup
     .object({
@@ -38,22 +28,19 @@ export default function Page() {
       password: yup.string().min(6).required(),
       image: yup
         .mixed<FileList>()
-        .test("fileSize", "File too large", (value: any) => {
+        .test('fileSize', 'File too large', (value: any) => {
           return (
             value.length === 0 ||
-            value.length >= 1 &&
-            value[0].size <= FILE_SIZE
+            (value.length >= 1 && value[0].size <= FILE_SIZE)
           );
         })
         .test(
-          "fileFormat",
-          "Unsupported Format",
+          'fileFormat',
+          'Unsupported Format',
           (value: any) =>
             value.length === 0 ||
-            value.length >= 1 &&
-            SUPPORTED_FORMATS.includes(value[0].type)
-        )
-
+            (value.length >= 1 && SUPPORTED_FORMATS.includes(value[0].type))
+        ),
     })
     .required();
 
@@ -68,202 +55,127 @@ export default function Page() {
     resolver: yupResolver(schema),
   });
 
-
-
-  // const register = async (
-  //   username: string,
-  //   password: string,
-  //   displayName: string,
-  //   picture: File | null
-  // ): Promise<void> => {
-  //   const user = await useSignUp(username, password);
-  //   const pictureUrl = picture
-  //     ? await attachPictureProfile(user, picture)
-  //     : defaultPhotoUrl;
-  //   await updateProfile(user, {
-  //     displayName: displayName,
-  //     photoURL: pictureUrl,
-  //   });
-  // };
-
-
   async function onSubmit(data: FormData) {
-
-    const picture = (data.image && data.image?.length > 0) ? data.image[0] : null;
-
+    setIsLoading(true);
+    const picture = data.image && data.image?.length > 0 ? data.image[0] : null;
     try {
       const user = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
-      ).then((userCredential) => {
-        // Signed in
+      ).then(async (userCredential) => {
         const user = userCredential.user;
-        updateProfile(user, {
+        await updateProfile(user, {
           displayName: data.username,
         });
+
         return user;
       });
 
-      const pictureUrl = picture ? await useUploadFile(picture, user.uid + "/pictureProfile/") : null;
+      const pictureUrl = picture
+        ? await uploadFile(picture, user.uid + '/pictureProfile/')
+        : null;
 
       await updateProfile(user, {
         photoURL: pictureUrl,
       });
 
-      router.push("/login");
+      router.push('/login');
     } catch (error: any) {
       const { code, message } = error;
 
-      const translatedMessage = code.startsWith('auth/') ? i18n.t(`errorMessages.${code}`) : message;
+      const translatedMessage = code.startsWith('auth/')
+        ? i18n.t(`errorMessages.${code}`)
+        : message;
 
-      setError("root.serverError", {
+      setError('root.serverError', {
         message: translatedMessage,
       });
     }
-
+    setIsLoading(false);
   }
 
   return (
-    <div className="flex">
-      <Card className="w-auto md:w-96 mt-5">
-        {errors.root && (
-          <Toast>
-            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
-              <HiExclamation className="h-5 w-5" />
-            </div>
-            <div className="ml-3 text-sm font-normal">
-              <p className="text-gray-900 dark:text-gray-100">
-                {errors.root.serverError?.message}
-              </p>
-            </div>
-            <Toast.Toggle />
-          </Toast>
+    <div className="px-8 py-6 mt-4 text-left shadow-2xl rounded-lg w-full md:w-1/2">
+      <div className="flex justify-center">
+        <Image src="/news.svg" width="100" height="100" alt="logo" />
+      </div>
+      <h3 className="text-2xl font-bold text-center">Create a new account</h3>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {errors.root?.serverError.message && (
+          <ErrorMessages errors={[errors.root.serverError.message]} />
         )}
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="mt-4 space-y-4">
           <div>
-            <div className="mb-2 block">
-              <Label
-                htmlFor="email1"
-                value="Your email"
-                color={errors.email ? "failure" : ""}
-              />
-            </div>
-            <TextInput
-              id="email1"
+            <label className="block" htmlFor="email">
+              Email
+            </label>
+            {errors.email?.message && (
+              <ErrorMessages errors={[errors.email?.message]} />
+            )}
+            <input
               type="text"
-              placeholder="example@email.com"
-              required={true}
-              icon={HiMail}
-              helperText={
-                errors.email && (
-                  <React.Fragment>
-                    <span className="font-medium">Oops!</span>{" "}
-                    {errors.email?.message}
-                  </React.Fragment>
-                )
-              }
-              color={errors.email ? "failure" : ""}
-              {...register("email")}
-            />
+              placeholder="Email"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              {...register('email')}
+            ></input>
           </div>
-
           <div>
-            <div className="mb-2 block">
-              <Label
-                htmlFor="username1"
-                value="Your username"
-                color={errors.username ? "failure" : ""}
-              />
-            </div>
-            <TextInput
-              id="username1"
-              type="text"
-              required={true}
-              color={errors.username ? "failure" : ""}
-              icon={HiUser}
-              placeholder="John Doe"
-              {...register("username")}
-              helperText={
-                errors.username && (
-                  <React.Fragment>
-                    <span className="font-medium">Oops!</span>{" "}
-                    {errors.username?.message}
-                  </React.Fragment>
-                )
-              }
-            />
+            <label className="block">Username</label>
+            {errors.username?.message && (
+              <ErrorMessages errors={[errors.username?.message]} />
+            )}
+            <input
+              type="test"
+              placeholder="Username"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              {...register('username')}
+            ></input>
           </div>
-
           <div>
-            <div className="mb-2 block">
-              <Label
-                htmlFor="password1"
-                value="Your password"
-                color={errors.password ? "failure" : ""}
-              />
-            </div>
-            <TextInput
-              id="password1"
+            <label className="block">Password</label>
+            {errors.password?.message && (
+              <ErrorMessages errors={[errors.password?.message]} />
+            )}
+            <input
               type="password"
-              required={true}
-              color={errors.password ? "failure" : ""}
-              icon={HiOutlineLockClosed}
-              placeholder="********"
-              {...register("password")}
-              helperText={
-                errors.password && (
-                  <React.Fragment>
-                    <span className="font-medium">Oops!</span>{" "}
-                    {errors.password?.message}
-                  </React.Fragment>
-                )
-              }
-            />
+              placeholder="Password"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              {...register('password')}
+            ></input>
           </div>
-
-          <div id="fileUpload">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="file"
-                value="Upload file"
-                color={errors.image ? "failure" : ""}
-              />
+          <div>
+            <label className="block">Profile picture</label>
+            {errors.image?.message && (
+              <ErrorMessages errors={[errors.image?.message]} />
+            )}
+            <input
+              type="file"
+              placeholder="Username"
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              {...register('image')}
+            ></input>
+          </div>
+          <div className="flex flex-col justify-between space-y-2">
+            <button className="px-6 py-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900 flex items-center justify-center">
+              <span className="text-lg">Login</span>
+              {isLoading ? <Spinner className="mx-3" /> : null}
+            </button>
+            <div className="flex flex-col items-center">
+              <span className="text-center text-gray-400">
+                {'  Already have an account ? '}
+              </span>
+              <Link
+                href={'/login'}
+                className="text-blue-700 underline-offset-4 hover:underline"
+              >
+                Sign in
+              </Link>
             </div>
-            <FileInput
-
-              helperText={
-                errors.image && (
-                  <React.Fragment>
-                    <span className="font-medium">Oops!</span>{" "}
-                    {errors.image?.message}
-                  </React.Fragment>
-                )
-              }
-              id="file"
-              color={errors.image ? "failure" : ""}
-              {...register("image")}
-            />
-            <p
-              id="helper-text-explanation"
-              className="mt-2 text-sm text-gray-500 dark:text-gray-400"
-            >
-              A profile picture is useful to confirm your are logged into your
-              account
-            </p>
           </div>
-
-          <Button type="submit">Sign In with credentials</Button>
-        </form>
-
-        <p className="text-center text-gray-400 ">
-          Already have an account ?{" "}
-          <Link href={"/login"} className="text-blue-700">
-            Sign Up
-          </Link>
-        </p>
-      </Card>
+        </div>
+      </form>
     </div>
   );
 }

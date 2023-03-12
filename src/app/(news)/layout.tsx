@@ -1,5 +1,5 @@
-import React from "react";
-import Appbar from "./Appbar";
+import React from 'react';
+import Navbar from './Navbar';
 
 export default function SigninLayout({
   children,
@@ -8,8 +8,10 @@ export default function SigninLayout({
 }) {
   return (
     <>
-      <Appbar />
-      {children}
+      {/* @ts-expect-error Server Component */}
+      <Navbar />
+
+      <main className="container-fluid">{children}</main>
     </>
   );
 }
