@@ -1,7 +1,7 @@
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "@/config/firebaseConfig";
 
-export const useUploadFile = async (
+export const uploadFile = async (
   file: File,
   filePath: string
 ): Promise<string> => {
