@@ -1,9 +1,10 @@
-import './globals.css'
+import '@/styles/globals.css';
+import Providers from '@/components/Providers';
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -12,7 +13,9 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body>{children}</body>
+      <body className="max-h-screen">
+        <Providers>{children}</Providers>
+      </body>
     </html>
-  )
+  );
 }
