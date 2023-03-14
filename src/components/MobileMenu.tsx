@@ -45,6 +45,7 @@ export const MobileMenu = () => {
                       width={100}
                       height={100}
                       alt={'avatar'}
+                      loading="lazy"
                     />
                     <span className="px-2">{session?.user?.name}</span>
                   </Link>

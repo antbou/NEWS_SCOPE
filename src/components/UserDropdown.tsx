@@ -18,6 +18,7 @@ export default function Dropdown(props: { src: string | null }) {
           width={100}
           height={100}
           alt={'avatar'}
+          loading="lazy"
         />
       </Menu.Button>
 

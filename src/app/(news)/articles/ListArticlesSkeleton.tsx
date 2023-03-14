@@ -1,8 +1,6 @@
-import React from 'react';
-
-export const ArticleSkeleton = () => {
+export const ArticleSkeleton = ({ className }: { className: string }) => {
   return (
-    <div className="container grid grid-cols lg:grid-cols-2 gap-x-10 gap-y-16 justify-items-center">
+    <div className={className}>
       {Array.from({ length: 6 }).map((item, index) => (
         <div className="grow w-full h-96 rounded-t-xl relative" key={index}>
           <div className="p-4 mx-auto border border-gray-300 rounded-md shadow h-full">

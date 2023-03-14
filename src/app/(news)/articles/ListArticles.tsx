@@ -2,10 +2,10 @@ import Card from '@/components/Card';
 import { fetchArticles } from '@/services/news';
 import React from 'react';
 
-export const ArticlesList = async () => {
+export const ArticlesList = async ({ className }: { className: string }) => {
   const { articles } = await fetchArticles();
   return (
-    <div className="container grid grid-cols lg:grid-cols-2 gap-y-16 gap-x-10 justify-items-center">
+    <div className={className}>
       {articles.map((article) => (
         <Card
           key={article.title}

@@ -1,5 +1,8 @@
 import '@/styles/globals.css';
 import Providers from '@/components/Providers';
+import { Inter } from '@next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -13,7 +16,7 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className="max-h-screen">
+      <body className={'max-h-screen ' + inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
