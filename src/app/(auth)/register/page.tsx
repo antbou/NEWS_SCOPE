@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { uploadFile } from '@/services/fileManager';
-import i18n from '@/i18n';
+import i18n from '@/locales/i18n';
 import Image from 'next/image';
 import ErrorMessages from '@/components/ErrorMessages';
 import { Spinner } from '@/components/Spinner';
