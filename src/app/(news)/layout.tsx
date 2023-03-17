@@ -11,7 +11,7 @@ export default function SigninLayout({
       {/* @ts-expect-error Server Component */}
       <Navbar />
 
-      <main className="container-fluid">{children}</main>
+      <div className="container-fluid">{children}</div>
     </>
   );
 }

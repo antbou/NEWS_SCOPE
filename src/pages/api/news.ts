@@ -1,4 +1,4 @@
-import { fetchArticles } from '@/services/news';
+import { fetchArticles } from '@/providers/news';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

@@ -1,3 +1,5 @@
+import { Nullable } from '@/types/common';
+
 export type Articles = {
   status: string;
   totalResults: number;
@@ -6,14 +8,14 @@ export type Articles = {
 
 export type Article = {
   source: {
-    id: string | null;
-    name: string | null;
+    id: Nullable<string>;
+    name: Nullable<string>;
   };
-  author: string | null;
-  title: string | null;
-  description: string | null;
-  url: string | null;
-  urlToImage: string | null;
-  publishedAt: string | null;
-  content: string | null;
+  author: Nullable<string>;
+  title: Nullable<string>;
+  description: Nullable<string>;
+  url: Nullable<string>;
+  urlToImage: Nullable<string>;
+  publishedAt: Nullable<string>;
+  content: Nullable<string>;
 };
