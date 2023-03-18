@@ -34,7 +34,7 @@ export default async function handler(
       articles = await fetchArticles(endpoint, topHeadlinesParams);
     }
   } catch (error) {
-    res.status(500).end(`Error fetching news: ${error}`).end();
+    res.status(500).end(`Error fetching news: ${error}`);
   }
 
   res.status(200).json(articles);

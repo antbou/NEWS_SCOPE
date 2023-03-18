@@ -6,8 +6,10 @@ export default function SigninLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex container-fluid justify-center items-center min-h-screen ">
-      {children}
+    <section className="flex flex-grow justify-center items-center">
+      <div className="container flex justify-center items-center">
+        {children}
+      </div>
     </section>
   );
 }

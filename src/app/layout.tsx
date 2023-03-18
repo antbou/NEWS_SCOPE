@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
-import Providers from '@/components/Providers';
+import Providers from '@/app/Providers';
 import { Inter } from '@next/font/google';
+import Navbar from './Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,13 +12,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
       <head />
-      <body className={'max-h-screen ' + inter.className}>
-        <Providers>{children}</Providers>
+      <body className={`flex flex-col min-h-screen ${inter.className}`}>
+        <Providers>
+          {/* @ts-expect-error Server Component */}
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
