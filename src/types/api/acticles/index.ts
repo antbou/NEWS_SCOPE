@@ -1,5 +1,27 @@
 import { Nullable } from '@/types/common';
 
+export type NewsApiParams = EverythingParams | TopHeadlinesParams;
+export type EverythingParams = {
+  q?: string;
+  qInTitle?: string;
+  searchIn?: 'title' | 'description' | 'content';
+  sources?: string;
+  domains?: string;
+  pageSize?: number;
+  page?: number;
+  language?: string;
+};
+
+export type TopHeadlinesParams = {
+  sources?: string;
+  q?: string;
+  language?: string;
+  country?: string;
+  category?: string;
+  pageSize?: number;
+  page?: number;
+};
+
 export type Articles = {
   status: string;
   totalResults: number;
