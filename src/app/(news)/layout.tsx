@@ -9,8 +9,7 @@ export default function NewsLayout({
   return (
     <>
       <main className="flex flex-grow flex-col items-center">
-        <div className="container-fluid">
-          <SearchForm />
+        <div className="container-fluid flex flex-col flex-grow items-center">
           {children}
         </div>
       </main>
