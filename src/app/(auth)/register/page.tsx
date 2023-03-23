@@ -11,8 +11,8 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { uploadFile } from '@/api/files';
 import i18n from '@/locales/i18n';
 import Image from 'next/image';
-import ErrorMessages from '@/components/ErrorMessages';
-import { Spinner } from '@/components/Spinner';
+import ErrorMessages from '@/components/ui/ErrorMessages';
+import { Spinner } from '@/components/ui/Spinner';
 
 export default function Page() {
   const router = useRouter();

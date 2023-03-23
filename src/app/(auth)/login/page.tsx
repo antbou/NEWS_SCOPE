@@ -8,8 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import ErrorMessages from '@/components/ErrorMessages';
-import { Spinner } from '@/components/Spinner';
+import ErrorMessages from '@/components/ui/ErrorMessages';
+import { Spinner } from '@/components/ui/Spinner';
 
 export default function Page() {
   const router = useRouter();

@@ -26,7 +26,7 @@ export const ArticleFeed = async ({
           {articles.map((article, index) => (
             <Article key={index} article={article} />
           ))}
-          <div className="col-span-2">
+          <div className="lg:col-span-2">
             <Pagination
               articlesParPage={searchParams.pageSize}
               totalArticles={totalResults}

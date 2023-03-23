@@ -1,6 +1,6 @@
 'use client';
 
-import Card from '@/components/Card';
+import Card from '@/components/ui/Card';
 import { Nullable } from '@/types/common';
 import React from 'react';
 import Image from 'next/image';

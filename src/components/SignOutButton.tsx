@@ -2,8 +2,8 @@
 
 import { signOut } from 'next-auth/react';
 import { FC, useState } from 'react';
-import ErrorMessages from './ErrorMessages';
-import { Spinner } from './Spinner';
+import ErrorMessages from './ui/ErrorMessages';
+import { Spinner } from './ui/Spinner';
 
 interface SignOutButtonProps {
   className?: string;
