@@ -1,5 +1,5 @@
 import Card from '@/components/Card';
-import { fetchArticles } from '@/providers/news';
+import { fetchArticles } from '@/api/news';
 import React from 'react';
 import Image from 'next/image';
 import { Nullable } from '@/types/common';

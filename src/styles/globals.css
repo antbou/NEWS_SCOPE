@@ -11,6 +11,6 @@
     @apply font-semibold underline-offset-4 hover:underline hover:decoration-sky-400;
   }
   .container-fluid {
-    @apply w-full px-2 sm:px-3 md:px-12;
+    @apply w-full px-2 sm:px-3 md:px-12 max-w-6xl mx-auto;
   }
 }

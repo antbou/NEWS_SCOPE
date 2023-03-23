@@ -1,4 +1,4 @@
-import { fetchArticles } from '@/providers/news';
+import { fetchArticles } from '@/api/news';
 import { EverythingParams, TopHeadlinesParams } from '@/types/api/acticles';
 import { NextApiRequest, NextApiResponse } from 'next';
 
