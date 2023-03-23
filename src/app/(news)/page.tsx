@@ -6,7 +6,10 @@ import { ArticleFeed } from './articles/ArticlesFeed';
 export default function Home({
   searchParams,
 }: {
-  searchParams: { q: string };
+  searchParams: {
+    q: string;
+    page: number;
+  };
 }) {
   return (
     <>
@@ -20,6 +23,7 @@ export default function Home({
             <ArticleFeed
               searchParams={{
                 q: searchParams.q,
+                page: searchParams.page || 1,
               }}
             />
           </Suspense>

@@ -12,7 +12,8 @@ export const SearchForm = () => {
 
   const debounced = useDebouncedCallback(
     (search) => {
-      router.push(`/?q=${search}`);
+      // replace only q param not page param
+      router.replace(`/?q=${search}`);
     },
     // delay in ms
     250
@@ -54,7 +55,6 @@ export const SearchForm = () => {
           placeholder="Type to search"
           defaultValue={search}
           onChange={(e) => {
-            console.log(e.target.value);
             debounced(e.target.value);
           }}
         />
