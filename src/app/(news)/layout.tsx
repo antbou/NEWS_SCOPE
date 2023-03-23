@@ -1,17 +1,18 @@
+import { SearchForm } from '@/components/SearchForm';
 import React from 'react';
-import Navbar from './Navbar';
 
-export default function SigninLayout({
+export default function NewsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <>
-      {/* @ts-expect-error Server Component */}
-      <Navbar />
-
-      <main className="container-fluid">{children}</main>
+      <main className="flex flex-grow flex-col items-center">
+        <div className="container-fluid flex flex-col flex-grow items-center">
+          {children}
+        </div>
+      </main>
     </>
   );
 }

@@ -1,11 +1,30 @@
-import { Inter } from "@next/font/google";
+import { ArticleSkeleton } from '@/app/(news)/articles/ArticlesFeedSkeleton';
+import { SearchForm } from '@/components/SearchForm';
+import { Suspense } from 'react';
+import { ArticleFeed } from './articles/ArticlesFeed';
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams: { q: string };
+}) {
   return (
-    <main>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </main>
+    <>
+      <div className="container">
+        <SearchForm />
+      </div>
+      <section className="flex flex-col items-center w-full py-5">
+        <div className="container grid grid-cols lg:grid-cols-2 gap-y-6 gap-x-6 justify-items-center divide-y-2">
+          <Suspense fallback={<ArticleSkeleton />}>
+            {/* @ts-expect-error Server Component */}
+            <ArticleFeed
+              searchParams={{
+                q: searchParams.q,
+              }}
+            />
+          </Suspense>
+        </div>
+      </section>
+    </>
   );
 }

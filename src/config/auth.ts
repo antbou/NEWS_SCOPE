@@ -4,7 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/config/firebaseConfig';
 import { FirebaseError } from 'firebase/app';
-import i18n from '@/i18n';
+import i18n from '@/locales/i18n';
 
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.GOOGLE_CLIENT_ID;

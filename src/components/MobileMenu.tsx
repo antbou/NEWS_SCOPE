@@ -23,7 +23,7 @@ export const MobileMenu = () => {
         <RxHamburgerMenu className="w-6 h-6" />
       </button>
       {active && (
-        <div className="absolute top-[var(--h-navbar)] left-0 inset-x-0 bg-white border border-gray-200 shadow-sm rounded-md">
+        <div className="z-50 absolute top-[var(--h-navbar)] left-0 inset-x-0 bg-white border border-gray-200 shadow-sm rounded-md">
           <div className="mx-2">
             <div className="my-3 space-y-3 h-full">
               <div className="flex flex-col gap-4">
@@ -45,6 +45,7 @@ export const MobileMenu = () => {
                       width={100}
                       height={100}
                       alt={'avatar'}
+                      loading="lazy"
                     />
                     <span className="px-2">{session?.user?.name}</span>
                   </Link>
