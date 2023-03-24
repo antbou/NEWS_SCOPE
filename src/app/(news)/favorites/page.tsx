@@ -3,7 +3,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebaseConfig';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/config/auth';
-import { Article } from '@/app/(news)/articles/Article';
+import { Article } from '@/components/articles/Article';
 
 export default async function Page() {
   const session = await getServerSession(authOptions);

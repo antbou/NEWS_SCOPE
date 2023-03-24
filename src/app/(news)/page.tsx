@@ -1,7 +1,7 @@
-import { ArticleSkeleton } from '@/app/(news)/articles/ArticlesFeedSkeleton';
+import { ArticleSkeleton } from '@/components/articles/ArticlesFeedSkeleton';
 import { SearchForm } from '@/components/SearchForm';
 import { Suspense } from 'react';
-import { ArticleFeed } from './articles/ArticlesFeed';
+import { ArticleFeed } from '../../components/articles/ArticlesFeed';
 
 export default function Home({
   searchParams,
