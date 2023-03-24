@@ -13,7 +13,7 @@ export const Emoji = () => {
         onClick={() => setIsOpen(true)}
       >
         {emoji ? (
-          <span className="text-2xl">{emoji}</span>
+          <span className="text-3xl">{emoji}</span>
         ) : (
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,27 +45,3 @@ export const Emoji = () => {
     </div>
   );
 };
-
-// Handle click outside of component to close the emoji picker
-// function OnClickOutside(
-//   ref: RefObject<HTMLDivElement>,
-//   handler: (event: MouseEvent | TouchEvent) => void
-// ) {
-//   useEffect(() => {
-//     const listener = (event: MouseEvent | TouchEvent) => {
-//       if (!ref.current || ref.current.contains(event.target as Node)) {
-//         return;
-//       }
-
-//       handler(event);
-//     };
-
-//     document.addEventListener('mousedown', listener);
-//     document.addEventListener('touchstart', listener);
-
-//     return () => {
-//       document.removeEventListener('mousedown', listener);
-//       document.removeEventListener('touchstart', listener);
-//     };
-//   }, [ref, handler]);
-// }

@@ -2,69 +2,98 @@
 
 import Card from '@/components/ui/Card';
 import { Nullable } from '@/types/common';
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Article as ArticleType } from '@/types/api/acticles';
+import { Article as ArticleType, ArticleDb } from '@/types/api/acticles';
 import { useSession } from 'next-auth/react';
-import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/config/firebaseConfig';
 import { Emoji } from './Emoji';
+import { Favorite } from './Favorite';
+
+export const ArticleContext = createContext<{
+  handleArticle: (article: ArticleDb) => void;
+  articleDb: ArticleDb;
+}>({
+  handleArticle: () => {},
+  articleDb: {} as ArticleDb,
+});
 
 export const Article = ({
   article,
   removeItself,
 }: {
-  article: ArticleType;
+  article: ArticleType | ArticleDb;
   removeItself: boolean;
 }) => {
   const { data: session } = useSession();
 
   const [shouldRemove, setShouldRemove] = useState(false);
-  const [isFavoured, setIsFavoured] = useState(false);
-  const [articleId, setArticleId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!session?.user?.email || !article.url) return;
-
-    setArticleId(btoa(encodeURIComponent(article.url + session.user.email)));
-  }, [session, article.url]);
-
-  useEffect(() => {
-    if (!articleId) return;
-
-    const getDocFromDb = async () => {
-      const articleRef = doc(db, 'articles', articleId);
-      const articleSnap = await getDoc(articleRef);
-      articleSnap.exists() ? setIsFavoured(true) : setIsFavoured(false);
-    };
-    getDocFromDb();
-  }, [articleId]);
+  const [articleDb, setArticleDb] = useState<ArticleDb>();
 
   const httpsOnlyForImage = (urlToImage: Nullable<string>) =>
     urlToImage?.startsWith('https') ? urlToImage : './no-news.svg';
 
-  const handleFavorite = async () => {
-    if (!articleId || !session?.user?.email) return;
+  useEffect(() => {
+    if (!session?.user?.email || !article?.url) return;
 
-    const favoritesRef = doc(db, 'articles', articleId);
+    if (article.hasOwnProperty('userId')) {
+      setArticleDb(article as ArticleDb);
+      return;
+    }
+
+    const articleId = btoa(
+      encodeURIComponent(article?.url + session?.user?.email)
+    );
+
+    const getArticleFromDb = async () => {
+      const articleRef = doc(db, 'articles', articleId);
+
+      const articleSnap = await getDoc(articleRef);
+
+      if (articleSnap.exists()) {
+        setArticleDb(articleSnap.data() as ArticleDb);
+      } else {
+        setArticleDb({
+          url: article?.url,
+          title: article.title,
+          urlToImage: article.urlToImage,
+          userId: session?.user?.email,
+          isFavorite: false,
+          emoji: '',
+        } as ArticleDb);
+      }
+    };
+    getArticleFromDb();
+  }, [session, article]);
+
+  // Handle article changes like favorite or emoji
+  const handleArticle = async (article: ArticleDb) => {
+    if (!session?.user?.email || !articleDb?.url) {
+      return;
+    }
+    const createArticle = async (article: ArticleDb) => {
+      const articleId = btoa(
+        encodeURIComponent(article.url + session?.user?.email)
+      );
+      const articleRef = doc(db, 'articles', articleId);
+      await setDoc(articleRef, article);
+    };
+    // @ts-ignore
+    articleDb.timestamp = serverTimestamp();
 
     try {
-      if (isFavoured) {
-        await deleteDoc(favoritesRef);
-        setIsFavoured(false);
-        if (removeItself) setShouldRemove(true);
-      } else {
-        const data = {
-          title: article.title,
-          url: article.url,
-          urlToImage: article.urlToImage,
-          userId: session.user.email,
-        };
-        await setDoc(favoritesRef, data);
-        setIsFavoured(true);
-      }
+      await createArticle(articleDb);
     } catch (error) {
       console.error(error);
+    }
+
+    // remove article from list if unfavorited
+    if (!articleDb.isFavorite && removeItself) {
+      setShouldRemove(true);
+      setArticleDb(undefined);
+    } else {
+      setArticleDb(articleDb);
     }
   };
 
@@ -73,31 +102,16 @@ export const Article = ({
   return (
     <Card>
       <>
-        {session && (
+        {session?.user?.email && (
           <div
             className={`absolute top-0 left-0 px-2 py-2 z-10 rounded-md flex space-x-2 items-center justify-center`}
           >
-            <div
-              className={`flex items-center justify-center ${
-                isFavoured
-                  ? 'text-amber-400 hover:text-red-900'
-                  : 'text-gray-300 hover:text-amber-400'
-              }`}
-              onClick={handleFavorite}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                className="bi bi-bookmark w-8 h-8"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM8.16 4.1a.178.178 0 0 0-.32 0l-.634 1.285a.178.178 0 0 1-.134.098l-1.42.206a.178.178 0 0 0-.098.303L6.58 6.993c.042.041.061.1.051.158L6.39 8.565a.178.178 0 0 0 .258.187l1.27-.668a.178.178 0 0 1 .165 0l1.27.668a.178.178 0 0 0 .257-.187L9.368 7.15a.178.178 0 0 1 .05-.158l1.028-1.001a.178.178 0 0 0-.098-.303l-1.42-.206a.178.178 0 0 1-.134-.098L8.16 4.1z"
-                />
-              </svg>
-            </div>
-            <Emoji />
+            {articleDb && (
+              <ArticleContext.Provider value={{ handleArticle, articleDb }}>
+                <Favorite />
+                <Emoji />
+              </ArticleContext.Provider>
+            )}
           </div>
         )}
         <Image

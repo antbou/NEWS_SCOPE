@@ -1,6 +1,8 @@
 import { Nullable } from '@/types/common';
 
 export type NewsApiParams = EverythingParams | TopHeadlinesParams;
+
+// Params for News API Everything endpoint
 export type EverythingParams = {
   q?: string;
   qInTitle?: string;
@@ -12,6 +14,7 @@ export type EverythingParams = {
   language?: string;
 };
 
+// Params for News API Top Headlines endpoint
 export type TopHeadlinesParams = {
   sources?: string;
   q?: string;
@@ -22,12 +25,14 @@ export type TopHeadlinesParams = {
   page?: number;
 };
 
+// Response from News API
 export type Articles = {
   status: string;
   totalResults: number;
   articles: Article[];
 };
 
+// Article get from News API
 export type Article = {
   source?: {
     id: Nullable<string>;
@@ -40,4 +45,15 @@ export type Article = {
   urlToImage: Nullable<string>;
   publishedAt?: Nullable<string>;
   content?: Nullable<string>;
+};
+
+// Article get from Firestore
+export type ArticleDb = {
+  title: Nullable<string>;
+  url: string;
+  urlToImage: Nullable<string>;
+  userId: string;
+  isFavorite: boolean;
+  emoji: string;
+  timestamp?: string;
 };
