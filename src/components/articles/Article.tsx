@@ -8,6 +8,7 @@ import { Article as ArticleType } from '@/types/api/acticles';
 import { useSession } from 'next-auth/react';
 import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/config/firebaseConfig';
+import { Emoji } from './Emoji';
 
 export const Article = ({
   article,
@@ -32,9 +33,9 @@ export const Article = ({
     if (!articleId) return;
 
     const getDocFromDb = async () => {
-      const docRef = doc(db, 'favorites', articleId);
-      const docSnap = await getDoc(docRef);
-      docSnap.exists() ? setIsFavoured(true) : setIsFavoured(false);
+      const articleRef = doc(db, 'articles', articleId);
+      const articleSnap = await getDoc(articleRef);
+      articleSnap.exists() ? setIsFavoured(true) : setIsFavoured(false);
     };
     getDocFromDb();
   }, [articleId]);
@@ -45,7 +46,7 @@ export const Article = ({
   const handleFavorite = async () => {
     if (!articleId || !session?.user?.email) return;
 
-    const favoritesRef = doc(db, 'favorites', articleId);
+    const favoritesRef = doc(db, 'articles', articleId);
 
     try {
       if (isFavoured) {
@@ -73,9 +74,11 @@ export const Article = ({
     <Card>
       <>
         {session && (
-          <div className={`absolute top-0 right-0 px-4 py-2 rounded-md z-50`}>
+          <div
+            className={`absolute top-0 left-0 px-2 py-2 z-10 rounded-md flex space-x-2 items-center justify-center`}
+          >
             <div
-              className={`text-xl font-bold text-right flex items-center justify-center ${
+              className={`flex items-center justify-center ${
                 isFavoured
                   ? 'text-amber-400 hover:text-red-900'
                   : 'text-gray-300 hover:text-amber-400'
@@ -94,6 +97,7 @@ export const Article = ({
                 />
               </svg>
             </div>
+            <Emoji />
           </div>
         )}
         <Image
@@ -101,7 +105,7 @@ export const Article = ({
           onClick={() =>
             article.url ? window.open(article.url, '_blank') : null
           }
-          className="w-full rounded-xl object-cover"
+          className="z-2 w-full rounded-xl object-cover"
           alt="Article image"
           fill
           unoptimized={true}

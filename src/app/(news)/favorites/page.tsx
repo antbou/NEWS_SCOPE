@@ -8,7 +8,7 @@ import { Article } from '@/components/articles/Article';
 export default async function Page() {
   const session = await getServerSession(authOptions);
   const q = query(
-    collection(db, 'favorites'),
+    collection(db, 'articles'),
     where('userId', '==', session?.user?.email)
   );
 

@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "@headlessui/react": "^1.7.13",
     "@hookform/resolvers": "^2.9.11",
     "@next-auth/firebase-adapter": "^2.0.1",
@@ -16,6 +18,7 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "emoji-mart": "^5.5.2",
     "eslint-config-next": "13.1.6",
     "firebase": "^9.18.0",
     "i18next": "^22.4.11",
