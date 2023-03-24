@@ -24,7 +24,7 @@ export const ArticleFeed = async ({
       {articles.length > 0 ? (
         <>
           {articles.map((article, index) => (
-            <Article key={index} article={article} />
+            <Article key={index} article={article} removeItself={false} />
           ))}
           <div className="lg:col-span-2">
             <Pagination

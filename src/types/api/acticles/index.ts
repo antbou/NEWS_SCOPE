@@ -29,15 +29,15 @@ export type Articles = {
 };
 
 export type Article = {
-  source: {
+  source?: {
     id: Nullable<string>;
     name: Nullable<string>;
   };
-  author: Nullable<string>;
+  author?: Nullable<string>;
   title: Nullable<string>;
-  description: Nullable<string>;
+  description?: Nullable<string>;
   url: Nullable<string>;
   urlToImage: Nullable<string>;
-  publishedAt: Nullable<string>;
-  content: Nullable<string>;
+  publishedAt?: Nullable<string>;
+  content?: Nullable<string>;
 };

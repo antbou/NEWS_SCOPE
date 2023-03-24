@@ -24,12 +24,12 @@ export default async function Navbar() {
           <div className="grow flex justify-end items-center text-lg">
             <div className="hidden sm:flex gap-4">
               <Link
-                href="/documentation"
+                href="/favorites"
                 className="flex my-2 items-center px-4 py-2 link"
               >
                 Favorites
               </Link>
-              {session ? (
+              {session?.user ? (
                 <>
                   <UserDropdown src={session.user?.image ?? null} />
                 </>
