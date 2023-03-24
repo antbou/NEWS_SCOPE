@@ -24,7 +24,7 @@ export const SearchForm = () => {
   }, [searchParams]);
 
   return (
-    <form className="mt-12 w-full">
+    <form className="mt-12 w-full" onSubmit={(event) => event.preventDefault()}>
       <label
         htmlFor="search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only"
