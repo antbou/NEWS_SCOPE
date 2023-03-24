@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import SignOutButton from './SignOutButton';
+import SignOutButton from '../SignOutButton';
 import Image from 'next/image';
 import { RxHamburgerMenu } from 'react-icons/rx';
 
@@ -27,17 +27,16 @@ export const MobileMenu = () => {
           <div className="mx-2">
             <div className="my-3 space-y-3 h-full">
               <div className="flex flex-col gap-4">
-                <Link href="/" className="px-4 py-3 text-lg link">
-                  Favorite
+                <Link href="/favorites" className="px-4 py-3 text-lg link">
+                  Favorites
                 </Link>
               </div>
               <span className="mx-2 block border-t-2 border-gray-400"></span>
-
-              {session ? (
+              {session?.user ? (
                 <div className="shadow-xl space-y-2">
                   <Link
                     className="flex flex-row px-4 items-center link"
-                    href={''}
+                    href={'/'}
                   >
                     <Image
                       className="w-8 h-8 rounded-full border-4 border-double border-gray-700"
@@ -49,10 +48,7 @@ export const MobileMenu = () => {
                     />
                     <span className="px-2">{session?.user?.name}</span>
                   </Link>
-                  <Link
-                    href={'/profile/edit'}
-                    className="w-full block px-4 pt-2 link"
-                  >
+                  <Link href={'/'} className="w-full block px-4 pt-2 link">
                     Edit
                   </Link>
                   <SignOutButton className="block px-4 py-2 text-md link" />

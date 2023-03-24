@@ -1,7 +1,8 @@
 'use client';
+
 import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import SignOutButton from './SignOutButton';
+import SignOutButton from '../SignOutButton';
 import Image from 'next/image';
 import Link from 'next/link';
 function classNames(...classes: string[]) {
@@ -40,7 +41,7 @@ export default function Dropdown(props: { src: string | null }) {
                     active ? 'link' : 'text-gray-700',
                     'block px-4 py-2 text-md'
                   )}
-                  href={''}
+                  href={'/'}
                 >
                   Edit
                 </Link>

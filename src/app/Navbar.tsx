@@ -2,8 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/config/auth';
-import UserDropdown from '@/components/UserDropdown';
-import { MobileMenu } from '@/components/MobileMenu';
+import UserDropdown from '@/components/navbar/UserDropdown';
+import { MobileMenu } from '@/components/navbar/MobileMenu';
+import { Title } from '@/components/navbar/Title';
 
 export default async function Navbar() {
   const session = await getServerSession(authOptions);
@@ -12,15 +13,7 @@ export default async function Navbar() {
     <header className="outline outline-b-2 outline-gray-100 shadow-sm">
       <nav className=" flex items-center justify-center">
         <div className="container-fluid flex items-center h-navbar justify-between">
-          <Link href="/" className="text-xl link flex flex-row items-center ">
-            <Image
-              src={'./news.svg'}
-              alt={'logo'}
-              width={'48'}
-              height={'48'}
-            ></Image>
-            <span className="px-4">News scope</span>
-          </Link>
+          <Title />
           <div className="grow flex justify-end items-center text-lg">
             <div className="hidden sm:flex gap-4">
               <Link
