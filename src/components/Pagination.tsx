@@ -20,6 +20,7 @@ const Pagination = ({
     if (searchParams.has('page')) searchParams.delete('page');
     searchParams.append('page', pageNumber.toString());
     router.push(`/?${searchParams.toString()}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   for (let i = 1; i <= Math.ceil(totalArticles / articlesParPage); i++) {
