@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
+import { ArticleContext } from './Article';
 
 export const Emoji = () => {
+  const useArticle = useContext(ArticleContext);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [emoji, setEmoji] = useState('');
+  const [emoji, setEmoji] = useState(useArticle.articleDb.emoji);
+
+  const toggleEmoji = async (emoji: string) => {
+    setIsOpen(false);
+    setEmoji(emoji);
+    const articleDb = useArticle.articleDb;
+    articleDb.emoji = emoji;
+    useArticle.handleArticle(articleDb);
+  };
 
   return (
     <div className={`flex items-center justify-center relative`}>
@@ -34,8 +45,7 @@ export const Emoji = () => {
             onEmojiSelect={(emoji: {
               native: React.SetStateAction<string>;
             }) => {
-              setEmoji(emoji.native);
-              setIsOpen(false);
+              toggleEmoji(emoji.native.toString());
             }}
             onClickOutside={() => setIsOpen(false)}
             theme={'light'}
