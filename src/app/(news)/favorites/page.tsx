@@ -5,9 +5,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/config/auth';
 import { Article } from '@/components/articles/Article';
 import { ArticleDb } from '@/types/api/acticles';
+import { redirect } from 'next/navigation';
 
 export default async function Page() {
   const session = await getServerSession(authOptions);
+
+  if (!session?.user?.email) {
+    return redirect('/login');
+  }
+
   const q = query(
     collection(db, 'articles'),
     where('isFavorite', '==', true),
