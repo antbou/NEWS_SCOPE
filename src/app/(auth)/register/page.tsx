@@ -169,6 +169,7 @@ export default function Page() {
               <Link
                 href={'/login'}
                 className="text-blue-700 underline-offset-4 hover:underline"
+                shallow={false}
               >
                 Sign in
               </Link>

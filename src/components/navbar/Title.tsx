@@ -6,7 +6,11 @@ import Image from 'next/image';
 
 export const Title = () => {
   return (
-    <Link href="/" className="text-xl link flex flex-row items-center ">
+    <Link
+      href="/"
+      className="text-xl link flex flex-row items-center"
+      shallow={false}
+    >
       <Image
         src={'./news.svg'}
         alt={'logo'}

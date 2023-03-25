@@ -114,6 +114,7 @@ export default function Page() {
               <Link
                 href={'/register'}
                 className="text-blue-700 underline-offset-4 hover:underline"
+                shallow={true}
               >
                 Sign Up
               </Link>

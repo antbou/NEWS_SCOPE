@@ -23,6 +23,7 @@ export default async function Navbar() {
                   <Link
                     href="/favorites"
                     className="flex my-2 items-center px-4 py-2 link"
+                    shallow={false}
                   >
                     Favorites
                   </Link>
@@ -32,6 +33,7 @@ export default async function Navbar() {
                 <Link
                   href="/api/auth/signin"
                   className={'flex my-2 items-center px-4 py-2 link'}
+                  shallow={false}
                 >
                   Sign in
                 </Link>

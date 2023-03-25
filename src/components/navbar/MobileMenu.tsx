@@ -27,7 +27,11 @@ export const MobileMenu = () => {
           <div className="mx-2">
             <div className="my-3 space-y-3 h-full">
               <div className="flex flex-col gap-4">
-                <Link href="/favorites" className="px-4 py-3 text-lg link">
+                <Link
+                  href="/favorites"
+                  className="px-4 py-3 text-lg link"
+                  shallow={false}
+                >
                   Favorites
                 </Link>
               </div>
@@ -37,6 +41,7 @@ export const MobileMenu = () => {
                   <Link
                     className="flex flex-row px-4 items-center link"
                     href={'/'}
+                    shallow={false}
                   >
                     <Image
                       className="w-8 h-8 rounded-full border-4 border-double border-gray-700"
@@ -55,7 +60,11 @@ export const MobileMenu = () => {
                 </div>
               ) : (
                 <div className="flex flex-col space-y-4">
-                  <Link href="/login" className="px-4 py-3 text-lg link">
+                  <Link
+                    href="/login"
+                    className="px-4 py-3 text-lg link"
+                    shallow={false}
+                  >
                     Login
                   </Link>
                 </div>
