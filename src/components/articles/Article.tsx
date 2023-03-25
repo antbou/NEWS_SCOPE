@@ -36,7 +36,8 @@ export const Article = ({
 
   useEffect(() => {
     setArticleDb(undefined);
-    if (!session?.user?.email || !article?.url) return;
+    // @ts-ignore
+    if (!session?.user?.id || !article?.url) return;
 
     if (article.hasOwnProperty('userId')) {
       setArticleDb(article as ArticleDb);
@@ -60,7 +61,8 @@ export const Article = ({
           url: article?.url,
           title: article.title,
           urlToImage: article.urlToImage,
-          userId: session?.user?.email,
+          // @ts-ignore
+          userId: session?.user?.id,
           isFavorite: false,
           emoji: '',
         } as ArticleDb);
@@ -71,7 +73,8 @@ export const Article = ({
 
   // Handle article changes like favorite or emoji
   const handleArticle = async (article: ArticleDb) => {
-    if (!session?.user?.email || !articleDb?.url) {
+    // @ts-ignore
+    if (!session?.user?.id || !articleDb?.url) {
       return;
     }
     const createArticle = async (article: ArticleDb) => {
@@ -105,7 +108,8 @@ export const Article = ({
   return (
     <Card>
       <>
-        {session?.user?.email && (
+        {/* @ts-ignore */}
+        {session?.user?.id && (
           <div
             className={`absolute top-0 left-0 px-2 py-2 z-10 rounded-md flex space-x-2 items-center justify-center`}
           >

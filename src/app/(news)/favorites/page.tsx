@@ -1,5 +1,5 @@
 import React from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '@/config/firebaseConfig';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/config/auth';
@@ -10,14 +10,19 @@ import { redirect } from 'next/navigation';
 export default async function Page() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.email) {
+  // @ts-ignore
+  if (!session?.user?.id) {
     return redirect('/login');
   }
 
+  const articlesRef = collection(db, 'articles');
+
   const q = query(
-    collection(db, 'articles'),
+    articlesRef,
     where('isFavorite', '==', true),
-    where('userId', '==', session?.user?.email)
+    // @ts-ignore
+    where('userId', '==', session?.user?.id),
+    orderBy('timestamp', 'desc')
   );
 
   const articles = await getDocs(q);
