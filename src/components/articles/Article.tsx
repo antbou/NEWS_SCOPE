@@ -35,6 +35,7 @@ export const Article = ({
     urlToImage?.startsWith('https') ? urlToImage : './no-news.svg';
 
   useEffect(() => {
+    setArticleDb(undefined);
     if (!session?.user?.email || !article?.url) return;
 
     if (article.hasOwnProperty('userId')) {
