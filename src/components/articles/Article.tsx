@@ -43,7 +43,8 @@ export const Article = ({
     }
 
     const articleId = btoa(
-      encodeURIComponent(article?.url + session?.user?.email)
+      // @ts-ignore
+      encodeURIComponent(article?.url + session?.user?.id)
     );
 
     const getArticleFromDb = async () => {
@@ -74,7 +75,8 @@ export const Article = ({
     }
     const createArticle = async (article: ArticleDb) => {
       const articleId = btoa(
-        encodeURIComponent(article.url + session?.user?.email)
+        // @ts-ignore
+        encodeURIComponent(article.url + session?.user?.id)
       );
       const articleRef = doc(db, 'articles', articleId);
       await setDoc(articleRef, article);

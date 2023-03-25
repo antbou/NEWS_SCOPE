@@ -76,11 +76,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
-      if (token) {
-        session.user!.email = token.email;
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        // @ts-ignore
+        session.user.id = token.uid;
       }
       return session;
+    },
+    jwt: async ({ user, token }) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
     },
     redirect() {
       return '/';
