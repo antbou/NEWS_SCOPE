@@ -9,8 +9,6 @@ import { Title } from '@/components/navbar/Title';
 export default async function Navbar() {
   const session = await getServerSession(authOptions);
 
-  console.log(session?.user);
-
   return (
     <header className="outline outline-b-2 outline-gray-100 shadow-sm">
       <nav className=" flex items-center justify-center">

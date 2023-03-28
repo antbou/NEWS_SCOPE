@@ -4,7 +4,6 @@ import { db } from '@/config/firebaseConfig';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/config/auth';
 import { Article } from '@/components/articles/Article';
-import { ArticleDb } from '@/types/api/acticles';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
@@ -34,7 +33,15 @@ export default async function Page() {
           return (
             <Article
               key={index}
-              article={article.data() as ArticleDb}
+              article={{
+                title: article.data().title,
+                url: article.data().url,
+                urlToImage: article.data().urlToImage,
+                userId: article.data().userId,
+                isFavorite: article.data().isFavorite,
+                emoji: article.data().emoji,
+                timestamp: article.data().timestamp.toDate().toString(),
+              }}
               removeItself={true}
             />
           );

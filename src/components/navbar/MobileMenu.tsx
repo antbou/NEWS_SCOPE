@@ -27,13 +27,15 @@ export const MobileMenu = () => {
           <div className="mx-2">
             <div className="my-3 space-y-3 h-full">
               <div className="flex flex-col gap-4">
-                <Link
-                  href="/favorites"
-                  className="px-4 py-3 text-lg link"
-                  shallow={false}
-                >
-                  Favorites
-                </Link>
+                {session?.user && (
+                  <Link
+                    href="/favorites"
+                    className="px-4 py-3 text-lg link"
+                    shallow
+                  >
+                    Favorites
+                  </Link>
+                )}
               </div>
               <span className="mx-2 block border-t-2 border-gray-400"></span>
               {session?.user ? (
@@ -65,7 +67,7 @@ export const MobileMenu = () => {
                     className="px-4 py-3 text-lg link"
                     shallow={false}
                   >
-                    Login
+                    Sign in
                   </Link>
                 </div>
               )}
