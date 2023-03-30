@@ -1,18 +1,23 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
+import Image from 'next/image';
+import * as yup from 'yup';
+
 import ErrorMessages from '@/components/ui/ErrorMessages';
 import { Spinner } from '@/components/ui/Spinner';
 
 export default function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/';
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const [isCredentialsLoading, setIsCredentialsLoading] =
     useState<boolean>(false);
@@ -39,20 +44,20 @@ export default function Page() {
 
   async function onSubmit(data: FormData) {
     setIsCredentialsLoading(true);
-    await signIn('credentials', {
+    const status = await signIn('credentials', {
       username: data.email,
       password: data.password,
-    })
-      .then((status) => {
-        if (status?.ok) {
-          router.push('/');
-        }
-      })
-      .catch((error) => {
-        setError('root.serverError', {
-          message: error.message,
-        });
+      redirect: false,
+    });
+
+    if (!status?.ok) {
+      setError('root.serverError', {
+        message: status?.error,
       });
+    } else {
+      router.refresh();
+      router.push(callbackUrl);
+    }
     setIsCredentialsLoading(false);
   }
 
@@ -116,7 +121,7 @@ export default function Page() {
                 className="text-blue-700 underline-offset-4 hover:underline"
                 shallow={true}
               >
-                Sign Up
+                Register
               </Link>
             </div>
           </div>
