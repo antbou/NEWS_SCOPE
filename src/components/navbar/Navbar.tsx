@@ -1,10 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
+
 import { getServerSession } from 'next-auth';
+
 import { authOptions } from '@/config/auth';
-import UserDropdown from '@/components/navbar/UserDropdown';
 import { MobileMenu } from '@/components/navbar/MobileMenu';
 import { Title } from '@/components/navbar/Title';
+import UserDropdown from '@/components/navbar/UserDropdown';
 
 export default async function Navbar() {
   const session = await getServerSession(authOptions);

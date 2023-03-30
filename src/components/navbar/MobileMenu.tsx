@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import SignOutButton from '../SignOutButton';
+import Link from 'next/link';
 import Image from 'next/image';
 import { RxHamburgerMenu } from 'react-icons/rx';
+import { useSession } from 'next-auth/react';
+
+import SignOutButton from '../SignOutButton';
 
 export const MobileMenu = () => {
   const { data: session, status } = useSession();

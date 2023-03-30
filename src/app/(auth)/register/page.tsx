@@ -1,18 +1,20 @@
 'use client';
 
-import { auth } from '@/config/firebaseConfig';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
+import i18n from '@/locales/i18n';
+import { auth } from '@/config/firebaseConfig';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { uploadFile } from '@/api/files';
-import i18n from '@/locales/i18n';
-import Image from 'next/image';
-import ErrorMessages from '@/components/ui/ErrorMessages';
 import { Spinner } from '@/components/ui/Spinner';
+import ErrorMessages from '@/components/ui/ErrorMessages';
 
 export default function Page() {
   const router = useRouter();
@@ -84,6 +86,7 @@ export default function Page() {
     } catch (error: any) {
       const { code, message } = error;
 
+      // Translate error messages from firebase into i18n
       const translatedMessage = code.startsWith('auth/')
         ? i18n.t(`errorMessages.${code}`)
         : message;
@@ -105,7 +108,6 @@ export default function Page() {
         {errors.root?.serverError.message && (
           <ErrorMessages errors={[errors.root.serverError.message]} />
         )}
-
         <div className="mt-4 space-y-4">
           <div>
             <label className="block" htmlFor="email">
@@ -159,7 +161,7 @@ export default function Page() {
           </div>
           <div className="flex flex-col justify-between space-y-2">
             <button className="px-6 py-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900 flex items-center justify-center">
-              <span className="text-lg">Login</span>
+              <span className="text-lg">Register</span>
               {isLoading ? <Spinner className="mx-3" /> : null}
             </button>
             <div className="flex flex-col items-center">

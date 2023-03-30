@@ -1,10 +1,12 @@
 'use client';
 
 import React, { Fragment } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+
 import { Menu, Transition } from '@headlessui/react';
 import SignOutButton from '../SignOutButton';
-import Image from 'next/image';
-import Link from 'next/link';
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
@@ -18,7 +20,7 @@ export default function Dropdown(props: { src: string | null }) {
           src={props.src ?? './profile.svg'}
           width={100}
           height={100}
-          alt={'avatar'}
+          alt="avatar"
           loading="lazy"
         />
       </Menu.Button>
