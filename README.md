@@ -11,9 +11,10 @@ This is a Next.js 13 project with App components that lists news and allows user
    4. [Dependencies installation](#dependencies-installation)
    5. [Run](#run)
 2. [Usage](#usage)
-3. [Contributing](#contributing)
-4. [Credits](#credits)
-5. [License](#license)
+3. [Docs](#docs)
+4. [Contributing](#contributing)
+5. [Credits](#credits)
+6. [License](#license)
 
 ## Setting up dev
 
@@ -29,8 +30,6 @@ This is a Next.js 13 project with App components that lists news and allows user
 
 ### Clone repository
 
-### Clone repository
-
 ```sh
 git clone git@github.com:ES-RIA2-REACT-AWS/microservice-frontend.git
 cd microservice-frontend/
@@ -43,7 +42,7 @@ To install and run this project locally, follow these steps:
 
 1. Clone this repository onto your local machine.
 2. Open a terminal window and navigate to the root directory of the project.
-3. Copy `./.env.local.example` and name it `./.env.local` and define your route through `VITE_API_BACKEND`
+3. Copy `./.env.local.example` and name it `./.env.local`
 
 ### Dependencies installation
 
@@ -83,6 +82,10 @@ If you would like to contribute code to the project, please follow these steps:
 We will review your pull request and discuss any necessary changes before merging it.
 
 Thank you for considering contributing to this project!
+
+## Docs
+
+The specifications and the architectural diagram can be found in the docs folder
 
 ## Credits
 
