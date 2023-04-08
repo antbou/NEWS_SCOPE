@@ -60,12 +60,14 @@ export default function Page() {
   async function onSubmit(data: FormData) {
     setIsLoading(true);
     const picture = data.image && data.image?.length > 0 ? data.image[0] : null;
-    try {
+    // try to create user
+   try {
       const user = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       ).then(async (userCredential) => {
+        // since we cannot create an user with display name, we update the user to add his firstname
         const user = userCredential.user;
         await updateProfile(user, {
           displayName: data.username,
